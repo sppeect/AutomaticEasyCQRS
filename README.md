@@ -27,6 +27,7 @@ dotnet add package EasyCqrs
 
 Veja como é fácil implementar um manipulador de comando usando o EasyCqrs:
 
+## Commands
 ```csharp
 using System.Threading.Tasks;
 using EasyCqrs;
@@ -38,9 +39,58 @@ public class MyCommand : ICommand
 
 public class MyCommandHandler : ICommandHandler<MyCommand>
 {
-    public Task Handle(MyCommand command)
+    public Task CommandHandle(MyCommand command)
     {
         // Lógica para manipular o comando
+        return Task.CompletedTask;
+    }
+}
+```
+##Queries
+```csharp
+using System.Threading.Tasks;
+using EasyCqrs;
+
+public class MyQuery : IQuery
+{
+    // Propriedades da Query
+}
+
+public class MyQueryResult : IQueryResult
+{
+    // Propriedades do Result
+}
+
+public class MyQueryHandler : IQueryHandler<MyQuery, MyQueryResult>
+{
+    public async Task<MyQueryResult> QueryHandle(MyQuery query)
+    {
+        // Lógica para manipular o comando
+        return new MyQueryResult();
+    }
+}
+```
+##Events
+```csharp
+using System.Threading.Tasks;
+using EasyCqrs;
+
+public class Event : IEvent
+{
+    public string UserId { get; }
+
+    public Event(string userId)
+    {
+        UserId = userId;
+    }
+}
+
+public class EventHandler : IEventHandler<Event>
+{
+    public Task EventHandle(Event @event)
+    {
+        // Lógica para manipular o evento Event
+        Console.WriteLine($"Usuário registrado com ID: {@event.UserId}");
         return Task.CompletedTask;
     }
 }
