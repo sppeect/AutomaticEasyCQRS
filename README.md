@@ -27,7 +27,7 @@ dotnet add package EasyCqrs
 
 Veja como é fácil implementar um manipulador de comando usando o EasyCqrs:
 
-## Commands
+### Commands
 ```csharp
 using System.Threading.Tasks;
 using EasyCqrs;
@@ -46,7 +46,7 @@ public class MyCommandHandler : ICommandHandler<MyCommand>
     }
 }
 ```
-##Queries
+### Queries
 ```csharp
 using System.Threading.Tasks;
 using EasyCqrs;
@@ -70,7 +70,7 @@ public class MyQueryHandler : IQueryHandler<MyQuery, MyQueryResult>
     }
 }
 ```
-##Events
+### Events
 ```csharp
 using System.Threading.Tasks;
 using EasyCqrs;
