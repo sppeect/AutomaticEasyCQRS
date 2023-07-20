@@ -1,6 +1,6 @@
-﻿using EasyCqrs.Contracts.Commands;
-using EasyCqrs.Contracts.Events;
-using EasyCqrs.Contracts.Queries;
+﻿using EasyCqrs.Orquestror.Commands;
+using EasyCqrs.Orquestror.Events;
+using EasyCqrs.Orquestror.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

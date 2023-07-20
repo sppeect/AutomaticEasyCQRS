@@ -17,11 +17,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Users\Marcelo\Desktop\EASYCQRS.png">
+    <None Include="..\..\EASYCQRS.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\README.md">
+    <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -29,10 +29,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\EasyCqrs.Common\EasyCqrs.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
