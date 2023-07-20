@@ -117,9 +117,6 @@ public class Startup
 }
 ```
 
-### Documentação
-
-Para mais informações sobre como usar o EasyCqrs e os recursos disponíveis, consulte nossa [documentação](link-da-documentacao).
 
 ## Contribuindo
 
