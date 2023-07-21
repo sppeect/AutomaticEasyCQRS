@@ -1,6 +1,6 @@
-# AutomaticEasyCQRS
+# AutomaticAutomaticEasyCQRS
 
-O EasyCqrs é uma biblioteca que visa facilitar a implementação do padrão CQRS (Command Query Responsibility Segregation) para desenvolvedores .NET. Com o EasyCqrs, você pode criar e gerenciar facilmente os manipuladores de comandos, consultas e eventos, tornando a implementação do CQRS mais simples e organizada.
+O AutomaticEasyCQRS é uma biblioteca que visa facilitar a implementação do padrão CQRS (Command Query Responsibility Segregation) para desenvolvedores .NET. Com o AutomaticEasyCQRS, você pode criar e gerenciar facilmente os manipuladores de comandos, consultas e eventos, tornando a implementação do CQRS mais simples e organizada.
 
 ## O que é CQRS?
 
@@ -13,14 +13,14 @@ O CQRS é um padrão arquitetural que separa a lógica de leitura (queries) da l
 - Suporte a injeção de dependência.
 - Interface intuitiva para implementar manipuladores.
 
-## Como usar o EasyCqrs?
+## Como usar o AutomaticEasyCQRS?
 
 ### Instalação
 
-Para começar a usar o AutomaticEasyCQRS em seu projeto .NET, basta instalar o pacote NuGet:
+Para começar a usar o AutomaticAutomaticEasyCQRS em seu projeto .NET, basta instalar o pacote NuGet:
 
 ```
-dotnet add package AutomaticEasyCQRS --version 1.0.2 
+dotnet add package AutomaticAutomaticEasyCQRS --version 1.0.2 
 ```
 
 ### Exemplo de uso
@@ -31,7 +31,7 @@ Todos os Metodos podem ser Async ou não.
 ### Commands
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs.Commands;
+using AutomaticEasyCQRS.Commands;
 
 public class MyCommand : ICommand
 {
@@ -50,7 +50,7 @@ public class MyCommandHandler : ICommandHandler<MyCommand>
 ### Queries
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs.Queries;
+using AutomaticEasyCQRS.Queries;
 
 public class MyQuery : IQuery
 {
@@ -74,7 +74,7 @@ public class MyQueryHandler : IQueryHandler<MyQuery, MyQueryResult>
 ### Events
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs.Events;
+using AutomaticEasyCQRS.Events;
 
 public class Event : IEvent
 {
@@ -131,7 +131,7 @@ public class EventHandler : IEventHandler<Event>
 Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Program.cs` do .NET 6:
 
 ```csharp
-using EasyCqrs.Orquestror;
+using AutomaticEasyCQRS.Orquestror;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Reflection;
 
@@ -155,10 +155,10 @@ Este projeto está licenciado sob a [MIT License](link-da-licenca).
 
 Se você tiver alguma dúvida ou precisar de suporte, entre em contato conosco pelo email: [contact@sppeectDev.com](mailto:contact@sppeectDev.com).
 
-Esperamos que o EasyCqrs facilite a implementação do CQRS em seus projetos .NET. Aproveite e feliz codificação!
+Esperamos que o AutomaticEasyCQRS facilite a implementação do CQRS em seus projetos .NET. Aproveite e feliz codificação!
 
 
-## Artigos que contribuiram para que eu criasse o EasyCqrs
+## Artigos que contribuiram para que eu criasse o AutomaticEasyCQRS
 https://dejanstojanovic.net/aspnet/2019/may/using-dispatcher-class-to-resolve-commands-and-queries-in-aspnet-core/
 https://dejanstojanovic.net/aspnet/2019/may/automatic-cqrs-handler-registration-in-aspnet-core-with-reflection/
 https://event-driven.io/en/how_to_register_all_mediatr_handlers_by_convention/
