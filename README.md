@@ -131,7 +131,7 @@ public class EventHandler : IEventHandler<Event>
 Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Program.cs` do .NET 6:
 
 ```csharp
-using AutomaticEasyCQRS.Orquestror;
+using AutomaticEasyCQRS;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Reflection;
 
