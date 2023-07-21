@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyCqrs.Orquestror.Queries
+namespace AutomaticEasyCQRS.Queries
 {
     public interface IQuery
     {

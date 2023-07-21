@@ -1,4 +1,4 @@
-﻿namespace EasyCqrs.Orquestror.Events
+﻿namespace AutomaticEasyCQRS.Events
 {
     public interface IEvent
     {

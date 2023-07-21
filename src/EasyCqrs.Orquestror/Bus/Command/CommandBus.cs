@@ -1,8 +1,7 @@
-﻿using EasyCqrs.Orquestror.Bus.Command;
-using EasyCqrs.Orquestror.Commands;
+﻿using AutomaticEasyCQRS.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EasyCqrs.Orquestror.Bus.Command;
+namespace AutomaticEasyCQRS.Bus.Command;
 public class CommandBus : ICommandBus
 {
     private readonly IServiceProvider _serviceProvider;

@@ -1,11 +1,11 @@
-﻿using EasyCqrs.Orquestror.Queries;
+﻿using AutomaticEasyCQRS.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyCqrs.Orquestror.Bus.Query
+namespace AutomaticEasyCQRS.Bus.Query
 {
     public interface IQueryBus
     {

@@ -1,4 +1,4 @@
-﻿using EasyCqrs.Orquestror.Events;
+﻿using AutomaticEasyCQRS.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyCqrs.Orquestror.Bus.Event
+namespace AutomaticEasyCQRS.Bus.Event
 {
     public class EventBus : IEventBus
     {

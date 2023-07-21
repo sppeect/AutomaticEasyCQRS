@@ -1,4 +1,4 @@
-﻿namespace EasyCqrs.Orquestror.Commands
+﻿namespace AutomaticEasyCQRS.Commands
 {
     public interface ICommand
     {

@@ -1,6 +1,6 @@
-﻿using EasyCqrs.Orquestror.Commands;
-using EasyCqrs.Orquestror.Events;
-using EasyCqrs.Orquestror.Queries;
+﻿using AutomaticEasyCQRS.Commands;
+using AutomaticEasyCQRS.Events;
+using AutomaticEasyCQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyCqrs.Orquestror
+namespace AutomaticEasyCQRS
 {
     public static class CqrsManualOrquestror
     {

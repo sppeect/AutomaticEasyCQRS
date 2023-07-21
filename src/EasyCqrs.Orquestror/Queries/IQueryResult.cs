@@ -1,4 +1,4 @@
-﻿namespace EasyCqrs.Orquestror.Queries
+﻿namespace AutomaticEasyCQRS.Queries
 {
     public interface IQueryResult
     {

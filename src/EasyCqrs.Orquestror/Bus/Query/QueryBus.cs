@@ -1,8 +1,7 @@
-﻿using EasyCqrs.Orquestror.Bus.Query;
-using EasyCqrs.Orquestror.Queries;
+﻿using AutomaticEasyCQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EasyCqrs.Orquestror.Bus.Query;
+namespace AutomaticEasyCQRS.Bus.Query;
 
 public class QueryBus : IQueryBus
 {

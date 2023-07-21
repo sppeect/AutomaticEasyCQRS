@@ -1,4 +1,4 @@
-﻿namespace EasyCqrs.Orquestror
+﻿namespace AutomaticEasyCQRS
 {
     public interface IHandler
     {

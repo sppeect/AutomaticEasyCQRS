@@ -1,15 +1,15 @@
-﻿using EasyCqrs.Orquestror.Bus.Command;
-using EasyCqrs.Orquestror.Bus.Event;
-using EasyCqrs.Orquestror.Bus.Query;
-using EasyCqrs.Orquestror.Commands;
-using EasyCqrs.Orquestror.Events;
-using EasyCqrs.Orquestror.Queries;
+﻿using AutomaticEasyCQRS.Bus.Command;
+using AutomaticEasyCQRS.Bus.Event;
+using AutomaticEasyCQRS.Bus.Query;
+using AutomaticEasyCQRS.Commands;
+using AutomaticEasyCQRS.Events;
+using AutomaticEasyCQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace EasyCqrs.Orquestror
+namespace AutomaticEasyCQRS
 {
     public static class CqrsBusRegistration
     {
