@@ -25,12 +25,13 @@ dotnet add package EasyCqrs
 
 ### Exemplo de uso
 
-Veja como é fácil implementar um manipulador de comando usando o EasyCqrs:
+Veja como é fácil implementar um manipulador de comando, consulta e evento.
+Todos os Metodos podem ser Async ou não.
 
 ### Commands
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Commands;
 
 public class MyCommand : ICommand
 {
@@ -49,7 +50,7 @@ public class MyCommandHandler : ICommandHandler<MyCommand>
 ### Queries
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Queries;
 
 public class MyQuery : IQuery
 {
@@ -73,16 +74,15 @@ public class MyQueryHandler : IQueryHandler<MyQuery, MyQueryResult>
 ### Events
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Events;
 
 public class Event : IEvent
 {
-    public string UserId { get; }
-
     public Event(string userId)
     {
         UserId = userId;
     }
+    public string UserId { get; }
 }
 
 public class EventHandler : IEventHandler<Event>
@@ -97,34 +97,32 @@ public class EventHandler : IEventHandler<Event>
 ```
 ### Controllers
 ``` csharp
-using EasyCqrs.Orquestror.Bus.Command;
-using EasyCqrs.Orquestror.Bus.Query;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-    public class TesteController : ControllerBase
+ public class TesteController : ControllerBase
     {
         public readonly ICommandBus commandBus;
         public readonly IQueryBus queryBus;
+        public readonly IEventBus eventBus;
 
 
-        public TesteController(ICommandBus commandBus, IQueryBus queryBus)
+        public TesteController(ICommandBus commandBus, IQueryBus queryBus, IEventBus eventBus)
         {
             this.commandBus = commandBus;
             this.queryBus = queryBus;
+            this.eventBus = eventBus;
         }
 
         [HttpGet]
-        [Route("/test")]
-        public async Task<IActionResult> GetAnything([FromRoute] q)
+        [Route("/teste/{q}")]
+        public async Task<IActionResult> GetTest([FromRoute] string q)
         {
             var handler = this.commandBus.Send(new TestCommand(q));
-            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TesteQuery(q));
+            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TestQuery(q));
+            var eventHandler = this.eventBus.Publish(new TestEvent(q));
+
 
             return Ok("Ok");
         }
     }
-}
 ```
 
 
