@@ -95,26 +95,53 @@ public class EventHandler : IEventHandler<Event>
     }
 }
 ```
+### Controllers
+``` csharp
+using EasyCqrs.Orquestror.Bus.Command;
+using EasyCqrs.Orquestror.Bus.Query;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+    public class TesteController : ControllerBase
+    {
+        public readonly ICommandBus commandBus;
+        public readonly IQueryBus queryBus;
+
+
+        public TesteController(ICommandBus commandBus, IQueryBus queryBus)
+        {
+            this.commandBus = commandBus;
+            this.queryBus = queryBus;
+        }
+
+        [HttpGet]
+        [Route("/test")]
+        public async Task<IActionResult> GetAnything([FromRoute] q)
+        {
+            var handler = this.commandBus.Send(new TestCommand(q));
+            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TesteQuery(q));
+
+            return Ok("Ok");
+        }
+    }
+}
+```
+
 
 ### Configuração
 
-Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Startup.cs` do ASP.NET Core:
+Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Program.cs` do .NET 6:
 
 ```csharp
-using Microsoft.Extensions.DependencyInjection;
+using EasyCqrs.Orquestror;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Reflection;
 
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        // Outras configurações...
-
-        // Registre os manipuladores de comandos, consultas e eventos automaticamente.
-        services.InjectHandlers(Assembly.GetExecutingAssembly());
-
-        // Outras configurações...
-    }
-}
+var builder = WebApplication.CreateBuilder(args);
+// Others Services
+// Add services to the container.
+...
+CqrsBusRegistration.RegisterBuses(builder.Services, Assembly.GetExecutingAssembly());
 ```
 
 
