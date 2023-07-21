@@ -1,4 +1,4 @@
-# EasyCqrs
+# AutomaticEasyCQRS
 
 O EasyCqrs é uma biblioteca que visa facilitar a implementação do padrão CQRS (Command Query Responsibility Segregation) para desenvolvedores .NET. Com o EasyCqrs, você pode criar e gerenciar facilmente os manipuladores de comandos, consultas e eventos, tornando a implementação do CQRS mais simples e organizada.
 
@@ -17,10 +17,10 @@ O CQRS é um padrão arquitetural que separa a lógica de leitura (queries) da l
 
 ### Instalação
 
-Para começar a usar o EasyCqrs em seu projeto .NET, basta instalar o pacote NuGet:
+Para começar a usar o AutomaticEasyCQRS em seu projeto .NET, basta instalar o pacote NuGet:
 
 ```
-dotnet add package EasyCqrs
+dotnet add package AutomaticEasyCQRS --version 1.0.2 
 ```
 
 ### Exemplo de uso
