@@ -97,6 +97,10 @@ public class EventHandler : IEventHandler<Event>
 ```
 ### Controllers
 ``` csharp
+using AutomaticEasyCQRS.Bus.Command;
+using AutomaticEasyCQRS.Bus.Event;
+using AutomaticEasyCQRS.Bus.Query;
+
  public class TesteController : ControllerBase
     {
         public readonly ICommandBus commandBus;
