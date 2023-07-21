@@ -25,12 +25,13 @@ dotnet add package EasyCqrs
 
 ### Exemplo de uso
 
-Veja como é fácil implementar um manipulador de comando usando o EasyCqrs:
+Veja como é fácil implementar um manipulador de comando, consulta e evento.
+Todos os Metodos podem ser Async ou não.
 
 ### Commands
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Commands;
 
 public class MyCommand : ICommand
 {
@@ -49,7 +50,7 @@ public class MyCommandHandler : ICommandHandler<MyCommand>
 ### Queries
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Queries;
 
 public class MyQuery : IQuery
 {
@@ -73,16 +74,15 @@ public class MyQueryHandler : IQueryHandler<MyQuery, MyQueryResult>
 ### Events
 ```csharp
 using System.Threading.Tasks;
-using EasyCqrs;
+using EasyCqrs.Events;
 
 public class Event : IEvent
 {
-    public string UserId { get; }
-
     public Event(string userId)
     {
         UserId = userId;
     }
+    public string UserId { get; }
 }
 
 public class EventHandler : IEventHandler<Event>
@@ -95,26 +95,51 @@ public class EventHandler : IEventHandler<Event>
     }
 }
 ```
+### Controllers
+``` csharp
+ public class TesteController : ControllerBase
+    {
+        public readonly ICommandBus commandBus;
+        public readonly IQueryBus queryBus;
+        public readonly IEventBus eventBus;
+
+
+        public TesteController(ICommandBus commandBus, IQueryBus queryBus, IEventBus eventBus)
+        {
+            this.commandBus = commandBus;
+            this.queryBus = queryBus;
+            this.eventBus = eventBus;
+        }
+
+        [HttpGet]
+        [Route("/teste/{q}")]
+        public async Task<IActionResult> GetTest([FromRoute] string q)
+        {
+            var handler = this.commandBus.Send(new TestCommand(q));
+            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TestQuery(q));
+            var eventHandler = this.eventBus.Publish(new TestEvent(q));
+
+
+            return Ok("Ok");
+        }
+    }
+```
+
 
 ### Configuração
 
-Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Startup.cs` do ASP.NET Core:
+Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Program.cs` do .NET 6:
 
 ```csharp
-using Microsoft.Extensions.DependencyInjection;
+using EasyCqrs.Orquestror;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Reflection;
 
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        // Outras configurações...
-
-        // Registre os manipuladores de comandos, consultas e eventos automaticamente.
-        services.InjectHandlers(Assembly.GetExecutingAssembly());
-
-        // Outras configurações...
-    }
-}
+var builder = WebApplication.CreateBuilder(args);
+// Others Services
+// Add services to the container.
+...
+CqrsBusRegistration.RegisterBuses(builder.Services, Assembly.GetExecutingAssembly());
 ```
 
 
@@ -131,3 +156,9 @@ Este projeto está licenciado sob a [MIT License](link-da-licenca).
 Se você tiver alguma dúvida ou precisar de suporte, entre em contato conosco pelo email: [contact@sppeectDev.com](mailto:contact@sppeectDev.com).
 
 Esperamos que o EasyCqrs facilite a implementação do CQRS em seus projetos .NET. Aproveite e feliz codificação!
+
+
+## Artigos que contribuiram para que eu criasse o EasyCqrs
+https://dejanstojanovic.net/aspnet/2019/may/using-dispatcher-class-to-resolve-commands-and-queries-in-aspnet-core/
+https://dejanstojanovic.net/aspnet/2019/may/automatic-cqrs-handler-registration-in-aspnet-core-with-reflection/
+https://event-driven.io/en/how_to_register_all_mediatr_handlers_by_convention/
