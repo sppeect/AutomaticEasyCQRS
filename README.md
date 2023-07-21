@@ -131,3 +131,9 @@ Este projeto está licenciado sob a [MIT License](link-da-licenca).
 Se você tiver alguma dúvida ou precisar de suporte, entre em contato conosco pelo email: [contact@sppeectDev.com](mailto:contact@sppeectDev.com).
 
 Esperamos que o EasyCqrs facilite a implementação do CQRS em seus projetos .NET. Aproveite e feliz codificação!
+
+
+## Artigos que contribuiram para que eu criasse o EasyCqrs
+https://dejanstojanovic.net/aspnet/2019/may/using-dispatcher-class-to-resolve-commands-and-queries-in-aspnet-core/
+https://dejanstojanovic.net/aspnet/2019/may/automatic-cqrs-handler-registration-in-aspnet-core-with-reflection/
+https://event-driven.io/en/how_to_register_all_mediatr_handlers_by_convention/
