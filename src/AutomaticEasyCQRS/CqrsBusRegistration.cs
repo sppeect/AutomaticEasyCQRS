@@ -1,13 +1,11 @@
-﻿using AutomaticEasyCQRS.Bus.Command;
+﻿using System.Reflection;
+using AutomaticEasyCQRS.Bus.Command;
 using AutomaticEasyCQRS.Bus.Event;
 using AutomaticEasyCQRS.Bus.Query;
 using AutomaticEasyCQRS.Commands;
 using AutomaticEasyCQRS.Events;
 using AutomaticEasyCQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Reflection;
 
 namespace AutomaticEasyCQRS
 {
@@ -15,16 +13,18 @@ namespace AutomaticEasyCQRS
     {
         public static void RegisterBuses(this IServiceCollection services, Assembly assembly)
         {
-            RegisterCommandBus(services, assembly);
-            RegisterQueryBus(services, assembly);
-            RegisterEventBus(services, assembly);
+            var assemblies = new List<Assembly> { assembly };
+            assemblies.AddRange(assembly.GetReferencedAssemblies().Select(Assembly.Load));
+
+            RegisterCommandBus(services, assemblies);
+            RegisterQueryBus(services, assemblies);
+            RegisterEventBus(services, assemblies);
         }
 
-        private static void RegisterCommandBus(IServiceCollection services, Assembly assembly)
+        private static void RegisterCommandBus(IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
-            // Finds all command handlers in the specified assembly and registers them
-            var commandHandlerTypes = assembly.GetTypes().Where(t =>
-                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
+            var commandHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
             );
 
             foreach (var handlerType in commandHandlerTypes)
@@ -33,15 +33,13 @@ namespace AutomaticEasyCQRS
                 services.AddTransient(commandInterface, handlerType);
             }
 
-            // Register the Command Bus
             services.AddSingleton<ICommandBus, CommandBus>();
         }
 
-        private static void RegisterQueryBus(IServiceCollection services, Assembly assembly)
+        private static void RegisterQueryBus(IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
-            // Finds all query handlers in the specified assembly and registers them
-            var queryHandlerTypes = assembly.GetTypes().Where(t =>
-                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
+            var queryHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
             );
 
             foreach (var handlerType in queryHandlerTypes)
@@ -50,15 +48,13 @@ namespace AutomaticEasyCQRS
                 services.AddTransient(queryInterface, handlerType);
             }
 
-            // Register the Query Bus
             services.AddSingleton<IQueryBus, QueryBus>();
         }
 
-        private static void RegisterEventBus(IServiceCollection services, Assembly assembly)
+        private static void RegisterEventBus(IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
-            // Finds all event handlers in the specified assembly and registers them
-            var eventHandlerTypes = assembly.GetTypes().Where(t =>
-                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>))
+            var eventHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>)))
             );
 
             foreach (var handlerType in eventHandlerTypes)
@@ -67,7 +63,6 @@ namespace AutomaticEasyCQRS
                 services.AddTransient(eventInterface, handlerType);
             }
 
-            // Register the Event Bus
             services.AddSingleton<IEventBus, EventBus>();
         }
     }
