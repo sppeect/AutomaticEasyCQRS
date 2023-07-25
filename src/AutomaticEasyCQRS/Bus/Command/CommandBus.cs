@@ -1,19 +1,33 @@
-﻿using AutomaticEasyCQRS.Commands;
+﻿using AutomaticEasyCQRS.Bus.Command;
+using AutomaticEasyCQRS.Commands;
+using AutomaticEasyCQRS.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AutomaticEasyCQRS.Bus.Command;
 public class CommandBus : ICommandBus
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly TelemetryStatistics _telemetryStatistics;
 
-    public CommandBus(IServiceProvider serviceProvider)
+    public CommandBus(IServiceScopeFactory serviceScopeFactory, TelemetryStatistics telemetryStatistics)
     {
-        _serviceProvider = serviceProvider;
+        _serviceScopeFactory = serviceScopeFactory;
+        _telemetryStatistics = telemetryStatistics;
     }
 
     public async Task Send<TCommand>(TCommand command) where TCommand : ICommand
     {
-        var handler = _serviceProvider.GetService<ICommandHandler<TCommand>>();
-        await handler.CommandHandle(command);
+        try
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var handler = scope.ServiceProvider.GetService<ICommandHandler<TCommand>>();
+                await handler.CommandHandle(command);
+            }
+            _telemetryStatistics.UpdateTelemetryStatistics(typeof(ICommand), false);
+        }
+        catch (Exception ex)
+        {
+            _telemetryStatistics.UpdateTelemetryStatistics(typeof(ICommand), true, ex.Message);
+        }
     }
 }

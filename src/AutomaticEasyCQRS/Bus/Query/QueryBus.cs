@@ -1,26 +1,40 @@
-﻿using AutomaticEasyCQRS.Queries;
+﻿using AutomaticEasyCQRS.Commands;
+using AutomaticEasyCQRS.Queries;
+using AutomaticEasyCQRS.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AutomaticEasyCQRS.Bus.Query;
 
 public class QueryBus : IQueryBus
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly TelemetryStatistics _telemetryStatistics;
 
-    public QueryBus(IServiceProvider serviceProvider)
+    public QueryBus(IServiceScopeFactory serviceScopeFactory, TelemetryStatistics telemetryStatistics)
     {
-        _serviceProvider = serviceProvider;
+        _serviceScopeFactory = serviceScopeFactory;
+        _telemetryStatistics = telemetryStatistics;
     }
 
     public async Task<TResult> Query<TQuery, TResult>(TQuery query) where TQuery : IQuery where TResult : IQueryResult
     {
-        // Verifica se existe um manipulador registrado para a consulta TQuery
+        using var scope = _serviceScopeFactory.CreateScope();
+        var handler = scope.ServiceProvider.GetService<IQueryHandler<TQuery, TResult>>();
 
-        if (_serviceProvider.GetService(typeof(IQueryHandler<TQuery, TResult>)) is not IQueryHandler<TQuery, TResult> handler)
+        if (handler == null)
         {
             throw new InvalidOperationException($"No query handler found for {typeof(TQuery).Name}");
         }
-
-        return await handler.QueryHandle(query);
+        try
+        {
+            _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), false);
+            return await handler.QueryHandle(query);
+        }
+        catch (Exception ex)
+        {
+            _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), true, ex.Message);
+            return default;
+        }
     }
 }
