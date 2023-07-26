@@ -28,6 +28,7 @@ public class CommandBus : ICommandBus
         catch (Exception ex)
         {
             _telemetryStatistics.UpdateTelemetryStatistics(typeof(ICommand), true, ex.Message);
+            throw;
         }
     }
 }

@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AutomaticEasyCQRS
-{  public enum EHandlerInstanceType
+{
+    public enum EHandlerInstanceType
     {
         Singleton,
         Scoped,

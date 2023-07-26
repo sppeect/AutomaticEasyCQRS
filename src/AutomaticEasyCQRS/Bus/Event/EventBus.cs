@@ -38,6 +38,7 @@ namespace AutomaticEasyCQRS.Bus.Event
             catch (Exception ex)
             {
                 _telemetryStatistics.UpdateTelemetryStatistics(typeof(IEvent), true, ex.Message);
+                throw;
             }
         }
     }

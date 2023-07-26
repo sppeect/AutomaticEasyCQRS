@@ -35,6 +35,7 @@ public class QueryBus : IQueryBus
         {
             _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), true, ex.Message);
             return default;
+            throw;
         }
     }
 }
