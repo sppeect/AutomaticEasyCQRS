@@ -15,8 +15,7 @@
     <RepositoryUrl>https://github.com/sppeect/EasyCqrs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>1.2.1</Version>
-    <PackageReleaseNotes>Essa versão adiciona uma maneira mais dinamica na automatização da injeção de dependencia dos handlers e seus respectivos contratos
-Adiciona também uma primeira versão de telemetria e trata erros nos barramentos.</PackageReleaseNotes>
+    <PackageReleaseNotes>Corrige a passagem do erro no trycatch do bus</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
