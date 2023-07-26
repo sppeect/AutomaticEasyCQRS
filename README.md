@@ -17,11 +17,12 @@ O CQRS é um padrão arquitetural que separa a lógica de leitura (queries) da l
 
 ### Instalação
 
-Para começar a usar o AutomaticAutomaticEasyCQRS em seu projeto .NET, basta instalar o pacote NuGet:
+Para começar a usar o AutomaticEasyCQRS em seu projeto .NET, basta instalar o pacote NuGet:
 
 ```
-dotnet add package AutomaticAutomaticEasyCQRS --version 1.0.2 
+dotnet add package AutomaticAutomaticEasyCQRS --version latest 
 ```
+Ou ir diretamente no Nuget e pesquiar por AutomaticEasyCQRS.
 
 ### Exemplo de uso
 
@@ -119,10 +120,13 @@ using AutomaticEasyCQRS.Bus.Query;
         [Route("/teste/{q}")]
         public async Task<IActionResult> GetTest([FromRoute] string q)
         {
-            var handler = this.commandBus.Send(new TestCommand(q));
-            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TestQuery(q));
-            var eventHandler = this.eventBus.Publish(new TestEvent(q));
 
+            // Command Syntax
+            var handler = this.commandBus.Send(new TestCommand(q));
+            // Query Syntax
+            var queryHandler = this.queryBus.Query<TestQuery, TestResult>(new TestQuery(q));
+            // Event Syntax
+            var eventHandler = this.eventBus.Publish(new TestEvent(q));
 
             return Ok("Ok");
         }
@@ -134,6 +138,18 @@ using AutomaticEasyCQRS.Bus.Query;
 
 Para registrar automaticamente os manipuladores de CQRS, adicione o seguinte código na classe `Program.cs` do .NET 6:
 
+Agora o usuario pode selecionar o tipo de instancia que ele quer criar (Scoped, Transient ou Singleton).
+```csharp
+public enum EHandlerInstanceType
+    {
+        Singleton,
+        Scoped,
+        Transient
+    }
+````
+
+Por default é EHandlerInstanceType.Transient
+
 ```csharp
 using AutomaticEasyCQRS;
 using Microsoft.AspNetCore.Diagnostics;
@@ -143,9 +159,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Others Services
 // Add services to the container.
 ...
-CqrsBusRegistration.RegisterBuses(builder.Services, Assembly.GetExecutingAssembly());
+CqrsBusRegistration.RegisterBuses(builder.Services, Assembly.GetExecutingAssembly(), EHandlerInstanceType.Scoped);
 ```
 
+### Telemetria 
+
+Para acessar a telemetria e salvar no banco de dados é necessario adicionar no seu mapeamento a classe
+
+```csharp
+AutomaticEasyCQRS.Telemetry.TelemetryStatistics;
+
+// Exemplo Entity Framework Core
+public DbSet<TelemetryStatistics> TelemetryStatistics { get; set; }
+```
 
 ## Contribuindo
 
