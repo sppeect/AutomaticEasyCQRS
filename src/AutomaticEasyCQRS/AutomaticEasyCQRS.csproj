@@ -14,9 +14,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sppeect/EasyCqrs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.1</Version>
-    <PackageReleaseNotes>Corrige a passagem do erro no trycatch do bus</PackageReleaseNotes>
+    <Version>1.2.2</Version>
+    <PackageReleaseNotes>Correção QueryBus Throw</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Telemetry\TelemetryStatistics - Cópia.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\EASYCQRS.png">

@@ -17,7 +17,6 @@ namespace AutomaticEasyCQRS
 
     public static class CqrsBusRegistration
     {
-        // InstanceType will directly reflect how handlers and commands are executed in dependency injection, by default it is transient
         public static void RegisterBuses(this IServiceCollection services, Assembly assembly, EHandlerInstanceType instanceType = EHandlerInstanceType.Transient)
         {
             var assemblies = new List<Assembly> { assembly };

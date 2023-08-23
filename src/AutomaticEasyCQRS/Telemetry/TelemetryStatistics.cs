@@ -38,7 +38,6 @@ namespace AutomaticEasyCQRS.Telemetry
                 TotalErrors++; 
             }
 
-            // Lógica adicional para capturar erros e atualizar a estatística de erros, se necessário.
         }
     }
 }

@@ -26,15 +26,16 @@ public class QueryBus : IQueryBus
         {
             throw new InvalidOperationException($"No query handler found for {typeof(TQuery).Name}");
         }
+
+        _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), false);
+
         try
         {
-            _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), false);
             return await handler.QueryHandle(query);
         }
         catch (Exception ex)
         {
             _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), true, ex.Message);
-            return default;
             throw;
         }
     }
