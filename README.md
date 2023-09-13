@@ -183,7 +183,7 @@ Este projeto está licenciado sob a [MIT License](link-da-licenca).
 
 ## Contato
 
-Se você tiver alguma dúvida ou precisar de suporte, entre em contato conosco pelo email: [contact@sppeectDev.com](mailto:contact@sppeectDev.com).
+Se você tiver alguma dúvida ou precisar de suporte, entre em contato conosco pelo email: [contato@jmdevelopment.dev](mailto:contato@jmdevelopment.dev).
 
 Esperamos que o AutomaticEasyCQRS facilite a implementação do CQRS em seus projetos .NET. Aproveite e feliz codificação!
 
