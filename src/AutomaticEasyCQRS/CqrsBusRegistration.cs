@@ -26,7 +26,7 @@ namespace AutomaticEasyCQRS
             RegisterQueryBus(services, assemblies, instanceType);
             RegisterEventBus(services, assemblies, instanceType);
 
-            services.AddScoped<TelemetryStatistics>();
+            services.AddSingleton<TelemetryStatistics>(_ => CqrsOrquestror.TelemetryStatisticsInstance);
         }
         private static void RegisterCommandBus(IServiceCollection services, IEnumerable<Assembly> assemblies, EHandlerInstanceType instanceType)
         {

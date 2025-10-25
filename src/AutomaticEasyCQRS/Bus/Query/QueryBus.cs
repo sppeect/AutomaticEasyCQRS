@@ -1,5 +1,4 @@
-﻿using AutomaticEasyCQRS.Commands;
-using AutomaticEasyCQRS.Queries;
+﻿using AutomaticEasyCQRS.Queries;
 using AutomaticEasyCQRS.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,11 +26,11 @@ public class QueryBus : IQueryBus
             throw new InvalidOperationException($"No query handler found for {typeof(TQuery).Name}");
         }
 
-        _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), false);
-
         try
         {
-            return await handler.QueryHandle(query);
+            var result = await handler.QueryHandle(query);
+            _telemetryStatistics.UpdateTelemetryStatistics(typeof(IQuery), false);
+            return result;
         }
         catch (Exception ex)
         {

@@ -1,43 +1,92 @@
-﻿using AutomaticEasyCQRS.Commands;
+﻿using System;
+using AutomaticEasyCQRS.Commands;
 using AutomaticEasyCQRS.Events;
 using AutomaticEasyCQRS.Queries;
+using System.Threading;
 
 namespace AutomaticEasyCQRS.Telemetry
 {
     public class TelemetryStatistics
     {
-        public virtual int TotalCommandsRegistered { get; set; }
-        public virtual int TotalQueriesRegistered { get; set; }
-        public virtual int TotalEventsRegistered { get; set; }
-        public virtual int TotalCommandsExecuted { get; set; }
-        public virtual int TotalQueriesExecuted { get; set; }
-        public virtual int TotalEventsPublished { get; set; }
-        public virtual int TotalErrors { get; set; }
-        public virtual string? LastErrorMessage { get; set; }
+        private int _totalCommandsRegistered;
+        private int _totalQueriesRegistered;
+        private int _totalEventsRegistered;
+        private int _totalCommandsExecuted;
+        private int _totalQueriesExecuted;
+        private int _totalEventsPublished;
+        private int _totalErrors;
+        private string? _lastErrorMessage;
 
-        public void UpdateTelemetryStatistics(Type commandType, bool hasError, string errorMessage = null)
+        public virtual int TotalCommandsRegistered => _totalCommandsRegistered;
+        public virtual int TotalQueriesRegistered => _totalQueriesRegistered;
+        public virtual int TotalEventsRegistered => _totalEventsRegistered;
+        public virtual int TotalCommandsExecuted => _totalCommandsExecuted;
+        public virtual int TotalQueriesExecuted => _totalQueriesExecuted;
+        public virtual int TotalEventsPublished => _totalEventsPublished;
+        public virtual int TotalErrors => _totalErrors;
+        public virtual string? LastErrorMessage => _lastErrorMessage;
+
+        public void IncrementRegisteredCount(Type handlerType)
         {
-            if (hasError == false)
+            if (typeof(ICommand).IsAssignableFrom(handlerType))
             {
-                if (typeof(ICommand).IsAssignableFrom(commandType))
+                Interlocked.Increment(ref _totalCommandsRegistered);
+            }
+            else if (typeof(IQuery).IsAssignableFrom(handlerType))
+            {
+                Interlocked.Increment(ref _totalQueriesRegistered);
+            }
+            else if (typeof(IEvent).IsAssignableFrom(handlerType))
+            {
+                Interlocked.Increment(ref _totalEventsRegistered);
+            }
+        }
+
+        public void UpdateTelemetryStatistics(Type messageType, bool hasError, string? errorMessage = null)
+        {
+            if (!hasError)
+            {
+                if (typeof(ICommand).IsAssignableFrom(messageType))
                 {
-                    TotalCommandsExecuted++;
+                    Interlocked.Increment(ref _totalCommandsExecuted);
                 }
-                else if (typeof(IQuery).IsAssignableFrom(commandType))
+                else if (typeof(IQuery).IsAssignableFrom(messageType))
                 {
-                    TotalQueriesExecuted++;
+                    Interlocked.Increment(ref _totalQueriesExecuted);
                 }
-                else if (typeof(IEvent).IsAssignableFrom(commandType))
+                else if (typeof(IEvent).IsAssignableFrom(messageType))
                 {
-                    TotalEventsPublished++;
+                    Interlocked.Increment(ref _totalEventsPublished);
                 }
             }
             else
             {
-                LastErrorMessage = errorMessage;
-                TotalErrors++; 
+                _lastErrorMessage = errorMessage;
+                Interlocked.Increment(ref _totalErrors);
             }
+        }
 
+        public TelemetryStatisticsSnapshot CreateSnapshot()
+        {
+            return new TelemetryStatisticsSnapshot(
+                TotalCommandsRegistered,
+                TotalQueriesRegistered,
+                TotalEventsRegistered,
+                TotalCommandsExecuted,
+                TotalQueriesExecuted,
+                TotalEventsPublished,
+                TotalErrors,
+                LastErrorMessage);
         }
     }
+
+    public record TelemetryStatisticsSnapshot(
+        int TotalCommandsRegistered,
+        int TotalQueriesRegistered,
+        int TotalEventsRegistered,
+        int TotalCommandsExecuted,
+        int TotalQueriesExecuted,
+        int TotalEventsPublished,
+        int TotalErrors,
+        string? LastErrorMessage);
 }

@@ -2,6 +2,7 @@
 using AutomaticEasyCQRS.Commands;
 using AutomaticEasyCQRS.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 public class CommandBus : ICommandBus
 {
@@ -18,11 +19,16 @@ public class CommandBus : ICommandBus
     {
         try
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            using var scope = _serviceScopeFactory.CreateScope();
+            var handler = scope.ServiceProvider.GetService<ICommandHandler<TCommand>>();
+
+            if (handler == null)
             {
-                var handler = scope.ServiceProvider.GetService<ICommandHandler<TCommand>>();
-                await handler.CommandHandle(command);
+                throw new InvalidOperationException($"No command handler found for {typeof(TCommand).Name}");
             }
+
+            await handler.CommandHandle(command);
+
             _telemetryStatistics.UpdateTelemetryStatistics(typeof(ICommand), false);
         }
         catch (Exception ex)

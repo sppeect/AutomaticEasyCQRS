@@ -1,11 +1,9 @@
-﻿using AutomaticEasyCQRS.Commands;
-using AutomaticEasyCQRS.Events;
+﻿using AutomaticEasyCQRS.Events;
 using AutomaticEasyCQRS.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AutomaticEasyCQRS.Bus.Event
@@ -23,16 +21,22 @@ namespace AutomaticEasyCQRS.Bus.Event
 
         public async Task Publish<TEvent>(TEvent @event) where TEvent : IEvent
         {
+            using var scope = _serviceScopeFactory.CreateScope();
+
             try
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
+                var handlers = scope.ServiceProvider.GetServices<IEventHandler<TEvent>>();
+                var handlerList = handlers?.ToList() ?? new List<IEventHandler<TEvent>>();
+
+                if (!handlerList.Any())
                 {
-                    var handlers = scope.ServiceProvider.GetServices<IEventHandler<TEvent>>();
-                    foreach (var handler in handlers)
-                    {
-                        await handler.EventHandle(@event);
-                    }
+                    _telemetryStatistics.UpdateTelemetryStatistics(typeof(IEvent), false);
+                    return;
                 }
+
+                var handlerTasks = handlerList.Select(handler => handler.EventHandle(@event));
+                await Task.WhenAll(handlerTasks);
+
                 _telemetryStatistics.UpdateTelemetryStatistics(typeof(IEvent), false);
             }
             catch (Exception ex)
