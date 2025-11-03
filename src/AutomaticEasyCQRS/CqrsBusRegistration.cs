@@ -30,7 +30,7 @@ namespace AutomaticEasyCQRS
         }
         private static void RegisterCommandBus(IServiceCollection services, IEnumerable<Assembly> assemblies, EHandlerInstanceType instanceType)
         {
-            var commandHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+            var commandHandlerTypes = assemblies.SelectMany(assembly => GetLoadableTypes(assembly)
                 .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
             );
 
@@ -64,7 +64,7 @@ namespace AutomaticEasyCQRS
 
         private static void RegisterQueryBus(IServiceCollection services, IEnumerable<Assembly> assemblies, EHandlerInstanceType instanceType)
         {
-            var queryHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+            var queryHandlerTypes = assemblies.SelectMany(assembly => GetLoadableTypes(assembly)
                 .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
             );
 
@@ -108,7 +108,7 @@ namespace AutomaticEasyCQRS
 
         private static void RegisterEventBus(IServiceCollection services, IEnumerable<Assembly> assemblies, EHandlerInstanceType instanceType)
         {
-            var eventHandlerTypes = assemblies.SelectMany(assembly => assembly.GetTypes()
+            var eventHandlerTypes = assemblies.SelectMany(assembly => GetLoadableTypes(assembly)
                 .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>)))
             );
             var eventHandlerMap = new Dictionary<Type, List<Type>>();
@@ -133,6 +133,19 @@ namespace AutomaticEasyCQRS
                 }
             }
             services.AddScoped<IEventBus, EventBus>();
+        }
+
+
+        private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                return ex.Types.Where(type => type is not null).Cast<Type>();
+            }
         }
 
         

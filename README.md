@@ -12,7 +12,7 @@ O CQRS é um padrão arquitetural que separa a lógica de leitura (queries) da l
 - Gerenciamento automático de manipuladores de CQRS.
 - Suporte a injeção de dependência.
 - Interface intuitiva para implementar manipuladores.
--
+
 ## Como usar o AutomaticEasyCQRS?
 
 ### Instalação
