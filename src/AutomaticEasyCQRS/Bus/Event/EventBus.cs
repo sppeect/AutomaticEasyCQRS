@@ -41,5 +41,20 @@ namespace AutomaticEasyCQRS.Bus.Event
                 throw;
             }
         }
+
+        bool IEventBus.HasRegistered<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IEventBus.Register<T>(IEventHandler<T> eventHandler, string topicOrQueue)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IEventBus.Unregister<T>(IEventHandler<T> eventHandler, string topicOrQueue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
