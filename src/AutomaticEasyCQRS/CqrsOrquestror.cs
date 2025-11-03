@@ -1,13 +1,14 @@
-﻿using AutomaticEasyCQRS.Commands;
+﻿using System;
+using AutomaticEasyCQRS.Commands;
 using AutomaticEasyCQRS.Events;
 using AutomaticEasyCQRS.Queries;
-using AutomaticEasyCQRS;
 using Microsoft.Extensions.DependencyInjection;
 using AutomaticEasyCQRS.Telemetry;
 
 public static class CqrsOrquestror
 {
-    private static readonly TelemetryStatistics _telemetryStatistics = new TelemetryStatistics();
+    private static readonly TelemetryStatistics _telemetryStatistics = new();
+    internal static TelemetryStatistics TelemetryStatisticsInstance => _telemetryStatistics;
 
     public static IServiceCollection AddCommandHandler<TCommand, TCommandHandler>(this IServiceCollection services, EHandlerInstanceType instanceType = EHandlerInstanceType.Transient)
         where TCommandHandler : class, ICommandHandler<TCommand>
@@ -30,7 +31,8 @@ public static class CqrsOrquestror
             default:
                 throw new ArgumentException("Invalid service lifetime selected.");
         }
-        _telemetryStatistics.TotalCommandsRegistered++;
+
+        _telemetryStatistics.IncrementRegisteredCount(typeof(TCommand));
         return services;
     }
 
@@ -56,7 +58,8 @@ public static class CqrsOrquestror
             default:
                 throw new ArgumentException("Invalid service lifetime selected.");
         }
-        _telemetryStatistics.TotalQueriesRegistered++;
+
+        _telemetryStatistics.IncrementRegisteredCount(typeof(TQuery));
         return services;
     }
 
@@ -81,7 +84,10 @@ public static class CqrsOrquestror
             default:
                 throw new ArgumentException("Invalid service lifetime selected.");
         }
-        _telemetryStatistics.TotalEventsRegistered++;
+
+        _telemetryStatistics.IncrementRegisteredCount(typeof(TEvent));
         return services;
     }
+
+    public static TelemetryStatisticsSnapshot GetTelemetrySnapshot() => _telemetryStatistics.CreateSnapshot();
 }
